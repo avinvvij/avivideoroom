@@ -13,6 +13,14 @@
   }
 }
 
+video {  
+  z-index: 0;
+  background: "white";
+  background-size: 100% 100%;
+  top: 0px;
+  left: 0px; /* fixed to left. Replace it by right if you want.*/
+}
+
 .App-header {
   background-color: #282c34;
   min-height: 100vh;
