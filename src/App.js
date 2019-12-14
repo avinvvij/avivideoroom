@@ -7,6 +7,7 @@ import AppBar from './CommonComponents/AppBar';
 import Peer from 'peerjs';
 import { Row, Col, notification, Button } from 'antd';
 import ChatSection from './Components/ChatSection';
+import { peerconfig } from './secret_conf';
 
 
 class App extends React.Component {
@@ -27,23 +28,7 @@ class App extends React.Component {
     let me = this;
     let mypeer = this.state.peer;
     if (this.state.peer == "") {
-      mypeer = new Peer(window.location.hash.replace("#", "") || null, {
-        host: "avisignalingserver.herokuapp.com",
-        port: 443,
-        secure: true,
-        config: {
-          "iceServers": [
-            {
-              urls: "stun:numb.viagenie.ca"
-            },
-            {
-              urls: "turn:numb.viagenie.ca",
-              username: "avinvij26@gmail.com",
-              credential: "avinvij"
-            }
-          ]
-        }
-      });
+      mypeer = new Peer(window.location.hash.replace("#", "") || null, peerconfig);
     }
 
     mypeer.on("open", (id) => {
