@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Input, Icon, Empty } from 'antd';
+import { Picker as EmojiPicker } from 'emoji-mart';
 
 class ChatSection extends Component {
 
@@ -7,7 +8,8 @@ class ChatSection extends Component {
         super(props);
         this.state = {
             message: "",
-            messages: []
+            messages: [],
+            displayEmojiPicker: false,
         }
     }
 
@@ -16,6 +18,7 @@ class ChatSection extends Component {
     }
 
     onSendMessage = () => {
+        console.log(this.state.message);
         if (this.state.message.trim() != "") {
             let me = this;
             let _messages = Object.assign([], this.state.messages);
@@ -24,7 +27,7 @@ class ChatSection extends Component {
                 message: this.state.message
             })
             if (this.props.sendMessage) {
-                this.props.sendMessage(this.state.message);
+                this.props.sendMessage(this.state.message.toString());
             }
             this.refs.chatmessages.scrollTop = this.refs.chatmessages.scrollHeight;
             me.setState({
@@ -47,6 +50,12 @@ class ChatSection extends Component {
         me.setState({
             messages: _messages
         })
+    }
+
+    convertMessageToEmoji = (fullString) => {
+        if (fullString.findIndex("{") >= 0) {
+
+        }
     }
 
     renderMessages = () => {
@@ -72,7 +81,7 @@ class ChatSection extends Component {
         return (
             <div style={{ flexDirection: "column", display: "flex", height: "82vh", backgroundColor: "#fafafa", borderLeft: "0.5px solid #a8a8a8" }}>
                 <div style={{ display: "flex", flex: 0.02, paddingLeft: "10px", paddingTop: "5px" }}>
-                    <h4>Chat Here</h4>                    
+                    <h4>Chat Here</h4>
                 </div>
                 <div style={{ display: "flex", flex: 0.93, flexDirection: "column", maxHeight: "77vh", /*background: "url('" + require("../assets/doodlechat.jpg") + "'" */ }}>
                     <div style={{ width: '100%', borderTop: "0.2px solid #a8a8a8", flex: 0.01 }}></div>
@@ -83,6 +92,12 @@ class ChatSection extends Component {
                         </div>
                     </div>
                 </div>
+                {this.state.displayEmojiPicker && <EmojiPicker onSelect={(event, emoji) => {
+                    console.log(event);                    
+                    this.setState({
+                        message: this.state.message + event.native
+                    })
+                }}></EmojiPicker>}
                 <div style={{ display: "flex", flex: 0.05, padding: "8px" }}>
                     <Input value={this.state.message} onKeyPress={(event) => {
                         if (event.key == "Enter") {
@@ -93,9 +108,16 @@ class ChatSection extends Component {
                             message: event.target.value
                         })
                     }} addonAfter={
-                        <Icon type="message" onClick={() => {
-                            this.onSendMessage();
-                        }}></Icon>
+                        <div>
+                            <Icon type="message" onClick={() => {
+                                this.onSendMessage();
+                            }}></Icon>
+                            <Icon style={{ marginLeft: "8px" }} type="smile" onClick={() => {
+                                this.setState({
+                                    displayEmojiPicker: !this.state.displayEmojiPicker
+                                })
+                            }}></Icon>
+                        </div>
                     } />
                 </div>
             </div>
